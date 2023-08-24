@@ -1,0 +1,89 @@
+Create 2 clusters and authenticate your clusters to create a context in your kube config file.
+make sure kubectl in installed
+Make sure you can switch between the 2 clusters at will.
+To see all available clusters use the command below
+---
+kubectl config get-contexts
+---
+To switch to a new context use the command below
+---
+kubectl config use-context $context-name
+---
+To view your config file use
+--- 
+kubectl config view
+--- 
+To view or kniw the cluster you are currently working on, use
+---
+kubectl config current-context
+---
+One of the cluster will be refered to as the master and the others would be refered to as the slave clusters.
+ArgoCd would be installed using Helm in the master cluster
+You can use the command below to install argocd in the master cluster
+---
+kubectl create namespace argocd
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+---
+After this, you would also have to install the ArgoCd Cli in your machine.
+Use the command below to install the argocd Cli
+---
+curl -sSL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+sudo install -m 555 argocd-linux-amd64 /usr/local/bin/argocd
+rm argocd-linux-amd64
+---
+To access the argocd gui use the command below to get the password
+---
+argocd admin initial-password -n argocd
+---
+For port fowarding, use the command below, 
+---
+kubectl port-forward svc/argocd-server -n argocd 8080:443
+---
+After this copy the ip and port and access on your browser.
+You can login with admin as username and the initial-password generated earlier
+
+After these steps we would sign in to argo cd using argo Cli
+run the command below to login to argocd via Cli
+---
+argocd login 127.0.0.1:8080 --username admin
+---
+Note that in the command above the ip address and port number should tally with the result of your port fowarding
+if you used ingress, then make sure to input the correct ip address and port number
+After running the command above a password prompt should appear, 
+you should input the initial-password you just generated and the sign in should be successful.
+To confirm successful login run the following commands
+---
+argocd app list
+argocd cluster list
+---
+
+Now we have to create a new cluster or lets say, add a new cluster to our argocd
+remember that argocd is installed in our master cluster
+run the command below to register other clusters to argocd
+---
+argocd cluster add kubecluster2 --name kubecluster2
+--- 
+Now note that kubecluster2 is the name of the context (cluster) we want to add.
+you can get the names by running the command below
+---
+kubectl config get-contexts
+---
+Also note that all the clusters(context) you want to add must be in the same kubeconfig file.
+After adding the cluster successfully, some kubernetes objects would be created in your slave kubernetes kube-system namespace
+objects such as Service account, a role and role binding, secrets and cluster roles and cluster role bindings.
+
+Now to check if successful, run the command below
+---
+argocd cluster list
+---
+you will notice that a new cluster has been created. you can also  check on the gui via settings to observe the new cluster that was created.
+
+Now its time to apply an application on argocd
+note that all applications you apply must be done through the master cluster
+meaning that you have to change your context back to the master cluster in other to apply any applications
+Also bear in mind that the application manifest "destination" will change when you want to apply an application to the second cluster
+in the destination, you have to specify the context name instead of using "in-cluster' which is the default.
+in the attached manifest you will have to change "kubecluster2" to whatever your cluster name is.
+I have attached a sample manifest for testing.
+Enjoy!!
+
