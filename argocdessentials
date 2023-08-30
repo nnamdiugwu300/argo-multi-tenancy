@@ -1,0 +1,5 @@
+To login to argocd use the command below
+argocd login 20.42.101.156:32456
+After the command above, a prompt will come up to input your password and username
+Also, the Ip address and the port numbers are incorrect so you should use more personalized addresses.
+You can also use ingress (server name if you dont want to use node port)
