@@ -1,0 +1,16 @@
+To login to argocd use the command below
+argocd login 20.42.101.156:32456
+After the command above, a prompt will come up to input your password and username
+Also, the IP address and the port numbers are incorrect so you should use more personalized addresses.
+You can also use ingress (server name if you dont want to use node port)
+---
+Integrating Argocd and private repositories
+For this to work first we have to sign in to our argocd cli using the above command
+Run the following command to add a github private repository in your argoCD
+---
+argocd repo add https://github.com/argoproj/argocd-example-apps --username <username> --password <password>
+In the command above you have to add the custom repository you want argo to sync with.
+Also you have to specify the github username and the token which you generated from your github account
+You can also do this using the UI
+From settings, Navigate to repositories and then connect repo and choose HTTP
+You can also use SSH for this.
