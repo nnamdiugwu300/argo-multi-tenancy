@@ -1,3 +1,8 @@
+To expose your argocd ui via node port, use the command below
+You can directly change the service from a cluster ip to Node port using the below command. Do this only if you have a public IP assigned to your node 
+kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "NodePort"}}'
+remember to edit the namespace and other commands as required
+
 To login to argocd use the command below
 argocd login 20.42.101.156:32456
 After the command above, a prompt will come up to input your password and username
