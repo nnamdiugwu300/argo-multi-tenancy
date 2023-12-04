@@ -46,6 +46,9 @@ After these steps we would sign in to argo cd using argo Cli
 run the command below to login to argocd via Cli
 ---
 argocd login 127.0.0.1:8080 --username admin
+or 
+argocd login argocd-nexus.camh.ca
+A prompt for username and password will pop up in which you should provide.
 ---
 Note that in the command above the ip address and port number should tally with the result of your port fowarding
 if you used ingress, then make sure to input the correct ip address and port number
