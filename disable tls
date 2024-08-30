@@ -1,0 +1,25 @@
+edit your deployment manifest and make some modifications.
+
+  use the code below;
+
+$kubectl edit deployment argocd-server -n argocd
+
+  Manifest:--
+    apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: argocd-server
+  namespace: argocd
+spec:
+  template:
+    spec:
+      containers:
+      - name: argocd-server
+        args:
+        - argocd-server
+        - --insecure  # Add this line
+-----
+run this after adding the changes;
+
+       kubectl rollout restart deployment argocd-server -n argocd
+   
